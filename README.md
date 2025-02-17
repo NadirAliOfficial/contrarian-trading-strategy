@@ -22,4 +22,4 @@ Edit `config.py` to adjust lookback period, threshold multiplier, and position s
 
 ## License
 MIT
-<!-- updated: 2024-10-12-r01 -->
+<!-- updated: 2025-02-17-r01 -->
