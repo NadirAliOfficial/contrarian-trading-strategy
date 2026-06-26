@@ -8,7 +8,7 @@ class ContrarianStrategy:
         self.trades = []
         self.balance = start_balance
         self.equity_curve = []
-    
+
     def enter_trade(self, condition, price):
         # Handle condition if it's a Series to avoid ambiguity
         if isinstance(condition, pd.Series):
@@ -16,7 +16,7 @@ class ContrarianStrategy:
         if condition:
             self.trades.append({"type": "buy", "price": price, "size": 1})
             self.balance -= price
-    
+
     def exit_trade(self, condition, price):
         # Handle condition if it's a Series to avoid ambiguity
         if isinstance(condition, pd.Series):
@@ -27,7 +27,7 @@ class ContrarianStrategy:
             self.balance += price * trade["size"]
             return profit
         return 0
-    
+
     def backtest(self, entry_drop=1.0, averaging_drop=2.0, exit_gain=1.0):
         profits = []
         for i, row in self.data.iterrows():
@@ -46,7 +46,7 @@ class ContrarianStrategy:
                 avg_price = np.mean([trade['price'] for trade in self.trades])
                 condition = low_price < avg_price * (1 - averaging_drop / 100)
                 self.enter_trade(condition, low_price)
-            
+
             # Simulate exiting trade
             if self.trades:
                 avg_price = np.mean([trade['price'] for trade in self.trades])
@@ -61,14 +61,14 @@ class ContrarianStrategy:
             self.equity_curve.append(self.balance + sum(trade["price"] for trade in self.trades))
 
         return profits
-    
+
     def analyze_performance(self, profits):
         profits = np.array(profits)
         total_profit = np.sum(profits)
         drawdown = np.min(np.cumsum(profits)) if len(profits) > 0 else 0
         win_rate = np.mean(profits > 0) if len(profits) > 0 else 0
         sharpe_ratio = np.mean(profits) / np.std(profits) if len(profits) > 0 else 0
-        
+
         return {
             "Total Profit": total_profit,
             "Max Drawdown": drawdown,
@@ -93,7 +93,7 @@ if __name__ == "__main__":
     end_date = "2024-01-28"
     print("Fetching data...")
     data = fetch_intraday_data(ticker, interval, start_date, end_date)
-    
+
     # Ensure data is not empty
     if data.empty:
         print("No data fetched. Check your ticker symbol or date range.")
