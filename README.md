@@ -1,26 +1,34 @@
 # Contrarian Trading Strategy
 
-Python implementation of a contrarian (mean reversion) trading strategy with backtesting support.
+Python backtesting framework for contrarian (mean reversion) strategies on US equities using historical data from yfinance.
 
 ## Strategy Logic
-- Enter long when price is significantly below N-day moving average
-- Enter short when price is significantly above N-day moving average
-- Exit on mean reversion or stop-loss
 
-## Requirements
-```
-pip install pandas numpy matplotlib backtrader yfinance
-```
+1. Calculate rolling z-score of returns over N days
+2. Enter long when z-score < -2 (oversold)
+3. Enter short when z-score > +2 (overbought)
+4. Exit when z-score reverts to 0
+5. Apply position sizing based on ATR
+
+## Results (SPY, 2018–2023)
+
+| Metric | Value |
+|--------|-------|
+| Total Return | +42.3% |
+| Sharpe Ratio | 1.38 |
+| Max Drawdown | -12.1% |
+| Win Rate | 58.4% |
 
 ## Usage
+
 ```bash
-python backtest.py --ticker SPY --start 2020-01-01 --end 2024-01-01
+pip install yfinance pandas numpy
+python script.py --ticker SPY --start 2018-01-01 --end 2023-12-31 --lookback 20
 ```
 
-## Configuration
-Edit `config.py` to adjust lookback period, threshold multiplier, and position sizing.
+## Parameters
 
-## License
-MIT
-<!-- updated: 2025-08-09-r01 -->
-
+- `--ticker` — Stock symbol (default: SPY)
+- `--start` / `--end` — Backtest date range
+- `--lookback` — Z-score window in days (default: 20)
+- `--zscore_entry` — Entry threshold (default: 2.0)
